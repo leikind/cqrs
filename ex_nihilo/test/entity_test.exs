@@ -4,6 +4,15 @@ defmodule EntityTest do
   alias ExNihilo.UUID
   alias PotionStore.ShoppingCart
 
+  setup_all do
+    if ExNihilo.Supervisor.event_store_started? do
+      ExNihilo.Supervisor.terminate_event_store
+    end
+    ExNihilo.Supervisor.start_event_store(event_store: ExNihilo.EventStore.InMemory, event_store_opts: [])
+    {:ok, %{}}
+  end
+
+
   test "domain object update" do
     cart =
       ShoppingCart.create(UUID.generate)

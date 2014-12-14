@@ -17,4 +17,7 @@ defmodule ExNihilo.EventStore.InMemory do
     {:ok, fetched_events}
   end
 
+  def size(events), do:  length(events)
+
+
 end

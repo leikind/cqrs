@@ -15,11 +15,15 @@ defmodule ExNihiloInMemoryTest do
 
     cart_uuid = ExNihilo.UUID.generate
 
+    assert ExNihilo.EventStore.size == 0
+
     cart =
       PotionStore.ShoppingCart.create(cart_uuid)
       |> PotionStore.ShoppingCart.add_item("Artline 100N")
       |> PotionStore.ShoppingCart.add_item("Coke classic")
       |> PotionStore.ShoppingCart.add_item("Coke zero")
+
+    assert ExNihilo.EventStore.size == 4
 
     IO.inspect cart
 

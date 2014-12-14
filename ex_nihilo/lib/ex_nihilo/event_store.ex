@@ -2,8 +2,10 @@ defmodule ExNihilo.EventStore do
 
   use GenServer
 
+  @name :event_store_proxy
+
   def start_link(backend, backend_opts) do
-    GenServer.start_link(__MODULE__, [backend, backend_opts], name: :event_store_proxy)
+    GenServer.start_link(__MODULE__, [backend, backend_opts], name: @name)
   end
 
   def init([backend_mod, backend_opts]) do
@@ -22,9 +24,16 @@ defmodule ExNihilo.EventStore do
     {:ok, events} = backend_mod.fetch(backend_state, uuid)
     { :reply, events, state }
   end
+  def handle_call(:size, _from, state = {backend_mod, backend_state}) do
+    size = backend_mod.size(backend_state)
+    { :reply, size, state }
+  end
+
+
+  # client API
 
   def store(uuid, event) do
-    GenServer.cast(:event_store_proxy, {:store, uuid, event})
+    GenServer.cast(@name, {:store, uuid, event})
   end
 
   # FIXME The agent API assumes that get has no side-effect on the state which
@@ -32,6 +41,9 @@ defmodule ExNihilo.EventStore do
   # may have to manage its own state itself, or we get rid of the agent and use
   # a custom GenServer where we can keep track of the an updated backend state
   def fetch(uuid) do
-    GenServer.call(:event_store_proxy, {:fetch, uuid})
+    GenServer.call(@name, {:fetch, uuid})
   end
+
+  def size, do: GenServer.call(@name, :size)
+
 end

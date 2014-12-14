@@ -1,4 +1,4 @@
-defmodule ExNihilo.EventStore.InMemory do
+defmodule ExNihilo.EventStore.Mnesia do  # this is currently just a copy of InMemory, only to test the pluggability of EventStore
 
   def init(_opts) do
     {:ok, []}

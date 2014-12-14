@@ -1,4 +1,4 @@
-defmodule ExNihilo.EventStore.InMemory do
+defmodule ExNihilo.EventStore.Postgres do  # this is currectly just a copy of ImMemory, only to test the pluggability of EventStore
 
   def init(_opts) do
     {:ok, []}

@@ -6,21 +6,22 @@ defmodule ExNihilo.EventStore.Ets do  # this is currently just a copy of InMemor
 
     :ets.new(@table_name, [:bag, :named_table, :public])
 
-    {:ok, nil}
+    {:ok, 1}
   end
 
-  def store(_, uuid, event = {event_name, event_payload}) do
-    :ets.insert(@table_name, {uuid, event_name, event_payload})
+  def store(n, uuid, event = {event_name, event_payload}) do
+    :ets.insert(@table_name, {uuid, n, event_name, event_payload})
+    n + 1
   end
 
-  def size(_state) do
+  def size(_n) do
     :ets.info(@table_name) |> Keyword.get(:size)
   end
 
 
   def fetch(_, uuid) do
     fetched_events = :ets.lookup(@table_name, uuid)
-    |> Enum.map fn({_uuid, event_name, event_payload})->  {event_name, event_payload} end
+    |> Enum.map fn({_uuid, _n, event_name, event_payload})->  {event_name, event_payload} end
 
     {:ok, fetched_events}
   end

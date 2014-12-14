@@ -1,11 +1,11 @@
-defmodule ExNihiloMnesiaTest do
+defmodule ExNihiloEtsTest do
   use ExUnit.Case
 
   setup_all do
     if ExNihilo.Supervisor.event_store_started? do
       ExNihilo.Supervisor.terminate_event_store
     end
-    ExNihilo.Supervisor.start_event_store(event_store: ExNihilo.EventStore.Mnesia, event_store_opts: [])
+    ExNihilo.Supervisor.start_event_store(event_store: ExNihilo.EventStore.Ets, event_store_opts: [])
     {:ok, %{}}
   end
 
